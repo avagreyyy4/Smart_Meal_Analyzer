@@ -9,6 +9,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
+components.html(open("public/index.html").read(), height=0)
 
 # Page title
 st.markdown('<h1 class="title-text">Smart Meal Analyzer</h1>', unsafe_allow_html=True)
