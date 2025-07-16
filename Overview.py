@@ -10,8 +10,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-components.html(open("public/index.html").read(), height=0)
+st.markdown("""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZY2PX2G3GY');
+</script>
+""", unsafe_allow_html=True
 
+)
 # Page title
 st.markdown('<h1 class="title-text">Smart Meal Analyzer</h1>', unsafe_allow_html=True)
 
