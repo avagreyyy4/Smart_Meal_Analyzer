@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # Set page config for better appearance
 st.set_page_config(
@@ -8,19 +9,22 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.markdown("""
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-E3TBHJK9EJ"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-E3TBHJK9EJ');
-</script>
-""", unsafe_allow_html=True)
+components.html(
+    """
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-E3TBHJK9EJ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-E3TBHJK9EJ');
+    </script>
+    """,
+    height=0,  # Don't show a visible component
+)
 
 # Page title
-st.markdown('<h1 class="title-text">Smart Meal Helper</h1>', unsafe_allow_html=True)
+st.markdown('<h1 class="title-text">Smart Meal Analyzer</h1>', unsafe_allow_html=True)
 
 # Introduction paragraph
 st.markdown("""
