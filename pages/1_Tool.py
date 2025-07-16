@@ -11,7 +11,16 @@ from rapidfuzz import process
 from tool import search_usda_foods 
 from thefuzz import process  
 
-
+st.markdown("""
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-ZY2PX2G3GY');
+</script>
+""", unsafe_allow_html=True)
 
 load_dotenv()
 API_KEY = os.getenv("USDA_API_KEY")
@@ -25,16 +34,6 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-st.markdown("""
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-ZY2PX2G3GY');
-</script>
-""", unsafe_allow_html=True)
 
 left_col, right_col = st.columns([2, 1])
 
