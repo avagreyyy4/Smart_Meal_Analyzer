@@ -30,7 +30,7 @@ def get_usda_food_details(fdc_id):
     
     if response.status_code == 200:
         food_data = response.json()
-        print(json.dumps(food_data["foodNutrients"], indent=2))  # ✅ This is the correct variable
+        #print(json.dumps(food_data["foodNutrients"], indent=2))  # ✅ This is the correct variable
         return food_data
     else:
         print("Failed to fetch food details:", response.text)
