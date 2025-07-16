@@ -2,6 +2,7 @@ import pandas as pd
 from streamlit_searchbox import st_searchbox
 import re
 import streamlit as st
+import streamlit.components.v1 as components
 import os
 from dotenv import load_dotenv
 from tool import search_usda_foods  
@@ -9,7 +10,6 @@ from tool import get_usda_food_details, extract_nutrient_summary
 from rapidfuzz import process
 from tool import search_usda_foods 
 from thefuzz import process  
-import streamlit.components.v1 as components
 
 
 components.html(open("public/index.html").read(), height=0)
