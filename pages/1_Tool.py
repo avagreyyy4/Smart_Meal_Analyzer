@@ -10,6 +10,7 @@ from rapidfuzz import process
 from tool import search_usda_foods 
 from thefuzz import process  
 
+components.html(open("public/index.html").read(), height=0)
 
 load_dotenv()
 API_KEY = os.getenv("USDA_API_KEY")
