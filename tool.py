@@ -7,7 +7,7 @@ import json
 load_dotenv()
 API_KEY = os.getenv("USDA_API_KEY")
 
-
+@st.cache_data(show_spinner="🔍 Searching USDA...")
 def search_usda_foods(query, data_type="SR Legacy", page_size=10):
     url = "https://api.nal.usda.gov/fdc/v1/foods/search"
     params = {
@@ -22,6 +22,7 @@ def search_usda_foods(query, data_type="SR Legacy", page_size=10):
     else:
         return []
 
+@st.cache_data(show_spinner="📦 Getting food details...")
 def get_usda_food_details(fdc_id):
     url = f"https://api.nal.usda.gov/fdc/v1/food/{fdc_id}"
     params = {"api_key": API_KEY}
