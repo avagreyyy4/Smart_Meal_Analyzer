@@ -2,19 +2,18 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 
-
-st.markdown(
+components.html(
     """
-    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <!-- Google Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
     <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-ZY2PX2G3GY');
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-ZY2PX2G3GY');
     </script>
     """,
-    unsafe_allow_html=True,
+    height=0,
 )
 
 # Set page config for better appearance
