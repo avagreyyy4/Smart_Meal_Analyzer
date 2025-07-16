@@ -12,20 +12,6 @@ from tool import search_usda_foods
 from thefuzz import process  
 
 
-components.html(
-    """
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZY2PX2G3GY');
-    </script>
-    """,
-    height=0,
-)
-
 load_dotenv()
 API_KEY = os.getenv("USDA_API_KEY")
 

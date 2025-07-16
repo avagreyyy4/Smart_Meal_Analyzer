@@ -2,19 +2,15 @@ import streamlit as st
 import streamlit.components.v1 as components
 import os
 
-components.html(
-    """
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZY2PX2G3GY');
-    </script>
-    """,
-    height=0,
-)
+
+try:
+    with open("public/index.html", "r") as f:
+        ga_code = f.read()
+        components.html(ga_code, height=50, scrolling=False)
+except FileNotFoundError:
+    st.warning("Google Analytics tracking file not found.")
+
+
 
 # Set page config for better appearance
 st.set_page_config(
