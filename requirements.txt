@@ -1,5 +1,8 @@
-streamlit
-pandas
-openai
-streamlit_searchbox
-python-dotenv
+streamlit>=1.34
+pandas>=2.2
+openai>=1.0
+streamlit_searchbox>=0.1.7
+python-dotenv>=1.0
+requests>=2.31
+thefuzz>=0.20
+python-Levenshtein>=0.23

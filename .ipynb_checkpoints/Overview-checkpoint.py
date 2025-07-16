@@ -1,12 +1,8 @@
 import streamlit as st
 
 # Set page config for better appearance
-st.set_page_config(
-    page_title="Smart Meal Helper",
-    page_icon="🥗",      
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+st.set_page_config(page_title="Smart Meal Analyzer", layout="centered")
+
 
 # Page title
 st.markdown('<h1 class="title-text">Smart Meal Analyzer</h1>', unsafe_allow_html=True)
@@ -36,21 +32,3 @@ st.markdown("""
 
 
 
-st.markdown("""
-    <style>
-    .footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        font-size: 13px;
-        color: gray;
-        padding: 8px;
-        background-color: rgba(0,0,0,0);  /* Transparent background */
-    }
-    </style>
-    <div class="footer">
-         2025 Smart Meal Helper
-    </div>
-""", unsafe_allow_html=True)
