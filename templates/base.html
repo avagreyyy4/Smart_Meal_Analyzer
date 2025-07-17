@@ -1,26 +1,27 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8">
-    <title>{% block title %}Smart Meal Helper{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-ZY2PX2G3GY"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-ZY2PX2G3GY');
-    </script>
+  <meta charset="UTF-8">
+  <title>{% block title %}Smart Meal Helper{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <nav class="nav">
-        <a href="{{ url_for('index') }}" class="nav-brand">Smart Meal Analyzer</a>
-        <a href="{{ url_for('tool_view') }}" class="nav-button">Meal Tool</a>
-    </nav>
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
-    {% block scripts %}{% endblock %}
+  <nav class="nav d-flex align-items-center px-3 py-2">
+    <a href="{{ url_for('index') }}" class="nav-button {% if request.path == '/' %}active{% endif %}">Overview</a>
+    <a href="{{ url_for('tool_view') }}" class="nav-button {% if request.path == '/tool' %}active{% endif %}">Meal Tool</a>
+  </nav>
+
+  <div class="container mt-4">
+    {% block content %}{% endblock %}
+  </div>
+
+  {% block scripts %}{% endblock %}
 </body>
 </html>
+
+<script>
+  window.addEventListener('beforeunload', function () {
+    navigator.sendBeacon('/clear_session');
+  });
+</script>

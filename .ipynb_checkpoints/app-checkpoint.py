@@ -110,9 +110,8 @@ def tool_view():
                         if name == 'Calories' and unit.upper() == 'KJ':
                             val /= 4.184
                         return round(val * multiplier, 1)
-                        
-                    meal_list = session.get('meal_list', [])
-                    meal_list.append({
+
+                    session['meal_list'].append({
                         'name': f"{food_name} ({int(grams)}g)",
                         'calories': safe_get('Calories'),
                         'protein': safe_get('Protein'),
@@ -120,7 +119,6 @@ def tool_view():
                         'fat': safe_get('Fat'),
                         'sugar': safe_get('Sugar')
                     })
-                    session['meal_list'] = meal_list
             return redirect(url_for('tool_view'))
 
         elif action == 'remove':
