@@ -4,30 +4,18 @@
 <div style="display:flex; gap:2em;">
   <div style="flex:2;">
     <h1>Meal Builder</h1>
-    <form method="post">
-      <input type="hidden" name="action" value="search">
+    <form method="post" id="add-form">
+      <input type="hidden" name="action" value="add">
       <label for="query">Search Foods:</label>
-      <input type="text" id="query" name="query" required>
-      <button type="submit">Search</button>
+      <input type="text" id="query" list="suggestions" autocomplete="off" required>
+      <datalist id="suggestions"></datalist>
+      <input type="hidden" name="fdc_id" id="fdc_id">
+      <input type="hidden" name="food_name" id="food_name">
+      <input type="number" name="grams" value="100" min="1" style="width:60px">
+      <button type="submit">Add</button>
     </form>
 
-    {% if results %}
-    <h2>Results</h2>
-    <ul>
-    {% for food in results %}
-      <li>
-        {{ food.description }}
-        <form method="post" style="display:inline">
-          <input type="hidden" name="action" value="add">
-          <input type="hidden" name="fdc_id" value="{{ food.fdcId }}">
-          <input type="hidden" name="food_name" value="{{ food.description }}">
-          <input type="number" name="grams" value="100" min="1" style="width:60px">
-          <button type="submit">Add</button>
-        </form>
-      </li>
-    {% endfor %}
-    </ul>
-    {% endif %}
+
 
     {% if meal_list %}
     <h2>Your Meal</h2>
@@ -114,4 +102,8 @@
 </div>
 <hr>
 <p style="text-align:center;font-size:0.8em;">2025 Smart Meal Helper</p>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='search.js') }}"></script>
 {% endblock %}

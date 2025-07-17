@@ -303,17 +303,12 @@ with left_col:
     
 
 
-    import openai  # or wherever you're calling GPT
+    from openai import OpenAI
     from dotenv import load_dotenv
     import os
-    from openai import OpenAI
-    
+
     load_dotenv()
-
-    # Get key securely
-    openai.api_key = os.getenv("OPENAI_API_KEY")
-
-    client = OpenAI(api_key=openai.api_key)
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     def get_gpt_meal_advice(nutrients: dict, meal_items: list) -> str:
         prompt = f"""
