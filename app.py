@@ -1,14 +1,14 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from dotenv import load_dotenv
 import pandas as pd
-import openai
+from openai import OpenAI
 import os
 from tool import search_usda_foods, get_usda_food_details, extract_nutrient_summary
 
 load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret")
-openai.api_key = os.getenv("OPENAI_API_KEY")
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 def generate_meal_warnings(nutrients: dict) -> list:
     limits = {
@@ -58,13 +58,22 @@ FOOD ITEMS:
 {', '.join(item['name'] for item in meal_items)}
 """
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "user", "content": prompt}],
         temperature=0.7,
         max_tokens=300,
     )
     return response.choices[0].message.content.strip()
+
+@app.route('/api/search')
+def api_search():
+    query = request.args.get('q', '')
+    if not query:
+        return jsonify([])
+    foods = search_usda_foods(query, "SR Legacy", 10)
+    results = [{"description": f["description"], "fdcId": f["fdcId"]} for f in foods]
+    return jsonify(results)
 
 @app.route('/')
 def index():
@@ -74,18 +83,12 @@ def index():
 @app.route('/tool', methods=['GET', 'POST'])
 def tool_view():
     meal_list = session.get('meal_list', [])
-    results = []
     summary = None
     advice = None
 
     if request.method == 'POST':
         action = request.form.get('action')
-        if action == 'search':
-            query = request.form.get('query')
-            if query:
-                foods = search_usda_foods(query, "SR Legacy", 20)
-                results = [{"description": f["description"], "fdcId": f["fdcId"]} for f in foods]
-        elif action == 'add':
+        if action == 'add':
             fdc_id = request.form.get('fdc_id')
             grams = float(request.form.get('grams', '100'))
             food_name = request.form.get('food_name', '')
@@ -142,7 +145,6 @@ def tool_view():
 
     return render_template(
         'tool.html',
-        results=results,
         summary=summary,
         meal_list=meal_list,
         total=total,
