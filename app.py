@@ -71,7 +71,7 @@ def api_search():
     query = request.args.get('q', '')
     if not query:
         return jsonify([])
-    foods = search_usda_foods(query, "SR Legacy", 10)
+    foods = search_usda_foods(query, "SR Legacy", 20)
     results = [{"description": f["description"], "fdcId": f["fdcId"]} for f in foods]
     return jsonify(results)
 
@@ -125,8 +125,10 @@ def tool_view():
 
         elif action == 'remove':
             idx = int(request.form.get('index', -1))
-            if 0 <= idx < len(session['meal_list']):
-                session['meal_list'].pop(idx)
+            meal_list = session.get('meal_list', [])  # Safely get the current meal list
+            if 0 <= idx < len(meal_list):
+                meal_list.pop(idx)
+                session['meal_list'] = meal_list  # Save updated list back to session
             return redirect(url_for('tool_view'))
 
         elif action == 'complete':

@@ -9,12 +9,10 @@
     <input type="hidden" name="action" value="add">
     <label for="query">Search Foods:</label>
 
-    <div style="display: flex; align-items: baseline; gap: 4px !important; margin-bottom: 1.5em; width: 100%; max-width: 600px !important;">
-      
-      <!-- SEARCH INPUT -->
-      <div style="flex: 1; position: relative;">
-        <input type="text" id="query" class="food-search" autocomplete="off" required
-               style="width: 100% !important; max-width: 450px !important;">
+    <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1em; max-width: 700px;">
+      <!-- Search input -->
+      <div style="flex: 2; position: relative;">
+        <input type="text" id="query" class="food-search" autocomplete="off" required style="width: 100%;">
         <ul id="custom-suggestions" style="
           position: absolute;
           background: white;
@@ -22,7 +20,7 @@
           z-index: 10;
           max-height: 300px;
           overflow-y: auto;
-          width: 100% !important;
+          width: 100%;
           display: none;
           list-style: none;
           padding: 0;
@@ -31,43 +29,30 @@
         "></ul>
       </div>
     
-      <!-- GRAMS INPUT -->
-      <div style="position: relative; flex-shrink: 0; margin-left: -3px !important;">
-          <input
-            type="number"
-            name="grams"
-            value="100"
-            min="1"
-            required
-            style="
-              width: 30px !important;
-              padding-right: 1.2em !important;
-              padding-left: 0.3em !important;
-              font-size: 0.9rem !important;
-              direction: ltr !important;
-              appearance: textfield !important;
-            "
-          >
-        <span style="
-          position: absolute !important;
-          right: 17px !important;
-          top: 50% !important;
-          transform: translateY(-50%) !important;
-          font-size: 0.9rem !important;
-          color: #aaa !important;
-          pointer-events: none;
-        ">g</span>
+      <!-- Group grams + button side-by-side -->
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <!-- Grams input with suffix -->
+        <div style="position: relative;">
+          <input type="number" name="grams" value="100" min="1" required
+                 style="width: 70px; padding-right: 1.6em;">
+          <span style="
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9rem;
+            color: #aaa;
+            pointer-events: none;
+          ">g</span>
+        </div>
+    
+        <!-- Add button -->
+        <button type="submit">Add</button>
       </div>
-    
-      <!-- ADD BUTTON -->
-      <button type="submit" style="margin-left: 0 !important;">Add</button>
-    
     </div>
+
     <input type="hidden" name="fdc_id" id="fdc_id">
     <input type="hidden" name="food_name" id="food_name">
-    <p id="thinking-msg" style="display:none; color: gray; font-style: italic; margin-top: 0.5em;">
-  Thinking...
-    </p>
   </form>
 
     {% if meal_list %}
@@ -188,16 +173,4 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='search.js') }}"></script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const completeForm = document.getElementById('complete-form');
-    const thinkingDiv = document.getElementById('thinking');
-
-    if (completeForm && thinkingDiv) {
-      completeForm.addEventListener('submit', function () {
-        thinkingDiv.style.display = 'block';
-      });
-    }
-  });
-</script>
 {% endblock %}

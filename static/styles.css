@@ -173,3 +173,42 @@ th {
   margin-top: 2rem !important;
   margin-bottom: 2rem !important;
 }
+
+.ai-response-box {
+  background-color: #e0f7fa; /* light teal */
+  border-left: 6px solid #00acc1; /* stronger blue */
+  padding: 16px;
+  margin-top: 20px;
+  border-radius: 6px;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #00363a; /* deep teal for contrast */
+}
+
+#custom-suggestions li {
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 1px solid #444;
+  background-color: #2c2c2c;
+  color: #eee;
+  font-size: 0.95rem;
+}
+
+#custom-suggestions li:hover,
+#custom-suggestions li:focus {
+  background-color: #444;
+  color: #fff;
+  font-weight: 500;
+}
+
+#custom-suggestions {
+  position: absolute;
+  background: #1f1f1f;
+  border: 1px solid #555;
+  z-index: 10;
+  max-height: 300px;
+  overflow-y: auto;
+  width: 50%; /* This matches the input box */
+  margin-top: 2px;
+  border-radius: 6px;
+}

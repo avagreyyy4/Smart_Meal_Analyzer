@@ -2,20 +2,73 @@
 {% block title %}Meal Tool{% endblock %}
 {% block content %}
 <div style="display:flex; gap:2em;">
+  <!-- LEFT: Meal Tool Builder -->
   <div style="flex:2;">
     <h1>Meal Builder</h1>
     <form method="post" id="add-form">
-      <input type="hidden" name="action" value="add">
-      <label for="query">Search Foods:</label>
-      <input type="text" id="query" list="suggestions" autocomplete="off" required>
-      <datalist id="suggestions"></datalist>
-      <input type="hidden" name="fdc_id" id="fdc_id">
-      <input type="hidden" name="food_name" id="food_name">
-      <input type="number" name="grams" value="100" min="1" style="width:60px">
-      <button type="submit">Add</button>
-    </form>
+    <input type="hidden" name="action" value="add">
+    <label for="query">Search Foods:</label>
 
-
+    <div style="display: flex; align-items: baseline; gap: 4px !important; margin-bottom: 1.5em; width: 100%; max-width: 600px !important;">
+      
+      <!-- SEARCH INPUT -->
+      <div style="flex: 1; position: relative;">
+        <input type="text" id="query" class="food-search" autocomplete="off" required
+               style="width: 100% !important; max-width: 450px !important;">
+        <ul id="custom-suggestions" style="
+          position: absolute;
+          background: white;
+          border: 1px solid #ccc;
+          z-index: 10;
+          max-height: 300px;
+          overflow-y: auto;
+          width: 100% !important;
+          display: none;
+          list-style: none;
+          padding: 0;
+          margin-top: 4px;
+          border-radius: 6px;
+        "></ul>
+      </div>
+    
+      <!-- GRAMS INPUT -->
+      <div style="position: relative; flex-shrink: 0; margin-left: -3px !important;">
+          <input
+            type="number"
+            name="grams"
+            value="100"
+            min="1"
+            required
+            style="
+              width: 30px !important;
+              padding-right: 1.2em !important;
+              padding-left: 0.3em !important;
+              font-size: 0.9rem !important;
+              direction: ltr !important;
+              appearance: textfield !important;
+            "
+          >
+        <span style="
+          position: absolute !important;
+          right: 17px !important;
+          top: 50% !important;
+          transform: translateY(-50%) !important;
+          font-size: 0.9rem !important;
+          color: #aaa !important;
+          pointer-events: none;
+        ">g</span>
+      </div>
+    
+      <!-- ADD BUTTON -->
+      <button type="submit" style="margin-left: 0 !important;">Add</button>
+    
+    </div>
+    <input type="hidden" name="fdc_id" id="fdc_id">
+    <input type="hidden" name="food_name" id="food_name">
+    <p id="thinking-msg" style="display:none; color: gray; font-style: italic; margin-top: 0.5em;">
+  Thinking...
+    </p>
+  </form>
 
     {% if meal_list %}
     <h2>Your Meal</h2>
@@ -33,35 +86,64 @@
     </ul>
 
     <h3>Totals</h3>
-    <ul>
-      <li>Calories: {{ total.calories }}</li>
-      <li>Protein: {{ total.protein }}</li>
-      <li>Carbs: {{ total.carbs }}</li>
-      <li>Fat: {{ total.fat }}</li>
-      <li>Sugar: {{ total.sugar }}</li>
-    </ul>
+    <table>
+      <thead>
+        <tr>
+          <th>Calories</th>
+          <th>Protein</th>
+          <th>Carbs</th>
+          <th>Fat</th>
+          <th>Sugar</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{ total.calories }}</td>
+          <td>{{ total.protein }}</td>
+          <td>{{ total.carbs }}</td>
+          <td>{{ total.fat }}</td>
+          <td>{{ total.sugar }}</td>
+        </tr>
+      </tbody>
+    </table>
 
     {% if warnings %}
-    <h3>Nutritional Warnings</h3>
-    <ul>
-    {% for w in warnings %}
-      <li>{{ w }}</li>
-    {% endfor %}
-    </ul>
+    <div class="alert alert-warning">
+      <h3>Nutritional Warnings</h3>
+      <ul>
+      {% for w in warnings %}
+        <li>{{ w }}</li>
+      {% endfor %}
+      </ul>
+    </div>
     {% endif %}
 
-    <form method="post">
+    <form method="post" id="complete-form">
       <input type="hidden" name="action" value="complete">
+        
       <button type="submit">This is my complete meal</button>
     </form>
     {% endif %}
-
-    {% if advice %}
-    <h3>Advice for Improving Your Meal</h3>
-    <p>{{ advice }}</p>
-    {% endif %}
+      
+    <div id="thinking">Thinking...</div>
+      
+{% if advice %}
+  <div class="ai-response-box">
+    {% for line in advice.split('\n') %}
+      {% if line.strip() %}
+        {% if loop.first %}
+          <p><strong>{{ line }}</strong></p>
+        {% else %}
+          <p>{{ line }}</p>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+      
   </div>
 
+  <!-- RIGHT: Reference Table -->
   <div style="flex:1;">
     <h4>Serving Size Reference (Typical Per-Person Amounts)</h4>
     <table border="1" cellpadding="6" cellspacing="0">
@@ -106,4 +188,16 @@
 
 {% block scripts %}
 <script src="{{ url_for('static', filename='search.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const completeForm = document.getElementById('complete-form');
+    const thinkingDiv = document.getElementById('thinking');
+
+    if (completeForm && thinkingDiv) {
+      completeForm.addEventListener('submit', function () {
+        thinkingDiv.style.display = 'block';
+      });
+    }
+  });
+</script>
 {% endblock %}
