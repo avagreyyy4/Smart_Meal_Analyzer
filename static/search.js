@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+function initSearchTool() {
   const queryInput = document.getElementById('query');
   const suggestionsBox = document.getElementById('custom-suggestions');
   const fdcInput = document.getElementById('fdc_id');
@@ -78,5 +78,12 @@ document.addEventListener('DOMContentLoaded', function () {
       }
     });
   });
-});
+
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initSearchTool);
+} else {
+  initSearchTool();
+}
 
