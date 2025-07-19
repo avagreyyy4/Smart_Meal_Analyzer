@@ -93,12 +93,17 @@ def tool_view():
 
         if action == 'add':
             fdc_id = request.form.get('fdc_id')
-            grams = float(request.form.get('grams', '100'))
+            grams_raw = request.form.get('grams', '100')
+            try:
+                grams = float(str(grams_raw).replace(',', '.'))
+            except ValueError:
+                grams = 100.0
             food_name = request.form.get('food_name', '')
             if fdc_id:
                 data = get_usda_food_details(fdc_id)
                 if data:
                     summary = extract_nutrient_summary(data)
+                    zero_fields = []
                     multiplier = grams / 100
 
                     def safe_get(name):
@@ -121,14 +126,34 @@ def tool_view():
                         'sugar': safe_get('Sugar')
                     })
                     session['meal_list'] = meal_list
+
+                    for label in ['Calories', 'Protein', 'Carbs', 'Fat', 'Sugar']:
+                        raw = summary.get(label)
+                        if not raw:
+                            zero_fields.append(label)
+                        else:
+                            try:
+                                if float(raw.split()[0]) == 0:
+                                    zero_fields.append(label)
+                            except Exception:
+                                pass
+
+                    if zero_fields:
+                        session['nutrient_warning'] = ', '.join(
+                            f"{n} is 0 but may not reflect accurate value." for n in zero_fields
+                        )
             return redirect(url_for('tool_view'))
 
         elif action == 'remove':
             idx = int(request.form.get('index', -1))
-            meal_list = session.get('meal_list', [])  # Safely get the current meal list
+            meal_list = session.get('meal_list', [])
             if 0 <= idx < len(meal_list):
                 meal_list.pop(idx)
-                session['meal_list'] = meal_list  # Save updated list back to session
+                session['meal_list'] = meal_list
+            if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+                meal_df = pd.DataFrame(meal_list) if meal_list else pd.DataFrame([], columns=['calories','protein','carbs','fat','sugar'])
+                totals = meal_df[["calories", "protein", "carbs", "fat", "sugar"]].sum().round(2)
+                return jsonify({'total': totals.to_dict()})
             return redirect(url_for('tool_view'))
 
         elif action == 'complete':
@@ -152,6 +177,7 @@ def tool_view():
     total = {}
     warnings = []
     advice = session.pop('advice', None)  # get once, then clear
+    nutrient_warning = session.pop('nutrient_warning', None)
 
     if meal_list:
         meal_df = pd.DataFrame(meal_list)
@@ -165,7 +191,8 @@ def tool_view():
         meal_list=meal_list,
         total=total,
         warnings=warnings,
-        advice=advice
+        advice=advice,
+        nutrient_warning=nutrient_warning
     )
     
 @app.route('/clear_session', methods=['POST'])

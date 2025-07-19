@@ -68,15 +68,18 @@
     <p id="thinking-msg" style="display:none; color: gray; font-style: italic; margin-top: 0.5em;">
   Thinking...
     </p>
+    {% if nutrient_warning %}
+    <p id="nutrient-warning" style="color:#f87171; margin-top:0.5em;">{{ nutrient_warning }}</p>
+    {% endif %}
   </form>
 
     {% if meal_list %}
     <h2>Your Meal</h2>
-    <ul>
+    <ul id="meal-list">
     {% for item in meal_list %}
       <li>
         {{ item.name }} - {{ item.calories }} kcal, {{ item.protein }}g protein, {{ item.carbs }}g carbs, {{ item.fat }}g fat, {{ item.sugar }}g sugar
-        <form method="post" style="display:inline">
+        <form method="post" class="remove-item-form" style="display:inline">
           <input type="hidden" name="action" value="remove">
           <input type="hidden" name="index" value="{{ loop.index0 }}">
           <button type="submit">Remove</button>
@@ -98,11 +101,11 @@
       </thead>
       <tbody>
         <tr>
-          <td>{{ total.calories }}</td>
-          <td>{{ total.protein }}</td>
-          <td>{{ total.carbs }}</td>
-          <td>{{ total.fat }}</td>
-          <td>{{ total.sugar }}</td>
+          <td id="total-calories">{{ total.calories }}</td>
+          <td id="total-protein">{{ total.protein }}</td>
+          <td id="total-carbs">{{ total.carbs }}</td>
+          <td id="total-fat">{{ total.fat }}</td>
+          <td id="total-sugar">{{ total.sugar }}</td>
         </tr>
       </tbody>
     </table>
