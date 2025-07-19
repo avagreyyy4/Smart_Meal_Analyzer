@@ -10,6 +10,15 @@ app = Flask(__name__)
 app.secret_key = os.getenv("FLASK_SECRET_KEY", "dev-secret")
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
+
+@app.before_request
+def clear_meal_on_reload():
+    """Clear meal data if the tool page is visited fresh."""
+    if request.endpoint == 'tool_view' and request.method == 'GET':
+        if session.pop('_preserve_meal', False):
+            return
+        session.clear()
+
 def generate_meal_warnings(nutrients: dict) -> list:
     limits = {
         'calories': 750,
@@ -142,6 +151,7 @@ def tool_view():
                         session['nutrient_warning'] = ', '.join(
                             f"{n} is 0 but may not reflect accurate value." for n in zero_fields
                         )
+            session['_preserve_meal'] = True
             return redirect(url_for('tool_view'))
 
         elif action == 'remove':
@@ -154,6 +164,7 @@ def tool_view():
                 meal_df = pd.DataFrame(meal_list) if meal_list else pd.DataFrame([], columns=['calories','protein','carbs','fat','sugar'])
                 totals = meal_df[["calories", "protein", "carbs", "fat", "sugar"]].sum().round(2)
                 return jsonify({'total': totals.to_dict()})
+            session['_preserve_meal'] = True
             return redirect(url_for('tool_view'))
 
         elif action == 'complete':
@@ -170,6 +181,7 @@ def tool_view():
                 }
                 advice = get_gpt_meal_advice(nutrients, meal_list)
                 session['advice'] = advice
+            session['_preserve_meal'] = True
             return redirect(url_for('tool_view'))
 
     # GET request

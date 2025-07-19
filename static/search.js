@@ -55,28 +55,28 @@ function initSearchTool() {
     }
   });
 
-  document.querySelectorAll('.remove-item-form').forEach(form => {
-    form.addEventListener('submit', async evt => {
-      evt.preventDefault();
-      const li = form.closest('li');
-      const formData = new FormData(form);
-      const resp = await fetch(form.action, {
-        method: 'POST',
-        body: formData,
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      });
-      if (!resp.ok) return window.location.reload();
-      const data = await resp.json();
-      li.remove();
-      const totals = data.total;
-      if (totals) {
-        document.getElementById('total-calories').textContent = totals.calories;
-        document.getElementById('total-protein').textContent = totals.protein;
-        document.getElementById('total-carbs').textContent = totals.carbs;
-        document.getElementById('total-fat').textContent = totals.fat;
-        document.getElementById('total-sugar').textContent = totals.sugar;
-      }
+  document.addEventListener('submit', async evt => {
+    const form = evt.target.closest('.remove-item-form');
+    if (!form) return; // not a remove form
+    evt.preventDefault();
+    const li = form.closest('li');
+    const formData = new FormData(form);
+    const resp = await fetch(form.action, {
+      method: 'POST',
+      body: formData,
+      headers: { 'X-Requested-With': 'XMLHttpRequest' }
     });
+    if (!resp.ok) return window.location.reload();
+    const data = await resp.json();
+    li.remove();
+    const totals = data.total;
+    if (totals) {
+      document.getElementById('total-calories').textContent = totals.calories;
+      document.getElementById('total-protein').textContent = totals.protein;
+      document.getElementById('total-carbs').textContent = totals.carbs;
+      document.getElementById('total-fat').textContent = totals.fat;
+      document.getElementById('total-sugar').textContent = totals.sugar;
+    }
   });
 
 }
