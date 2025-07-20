@@ -68,47 +68,54 @@
     <p id="thinking-msg" style="display:none; color: gray; font-style: italic; margin-top: 0.5em;">
   Thinking...
     </p>
+    {% if nutrient_warning %}
+    <p id="nutrient-warning" style="color:#f87171; margin-top:0.5em;">{{ nutrient_warning }}</p>
+    {% endif %}
   </form>
 
     {% if meal_list %}
     <h2>Your Meal</h2>
-    <ul>
-    {% for item in meal_list %}
-      <li>
-        {{ item.name }} - {{ item.calories }} kcal, {{ item.protein }}g protein, {{ item.carbs }}g carbs, {{ item.fat }}g fat, {{ item.sugar }}g sugar
-        <form method="post" style="display:inline">
-          <input type="hidden" name="action" value="remove">
-          <input type="hidden" name="index" value="{{ loop.index0 }}">
-          <button type="submit">Remove</button>
-        </form>
-      </li>
-    {% endfor %}
-    </ul>
+    <div id="meal-list">
+      {% for item in meal_list %}
+        <div class="meal-item" style="margin-bottom: 0.5em; padding: 0.5em; border: 1px solid #eee; border-radius: 4px;">
+          <span class="meal-item-info">
+            {{ item.name }} - {{ item.calories }} kcal, {{ item.protein }}g protein, {{ item.carbs }}g carbs, {{ item.fat }}g fat, {{ item.sugar }}g sugar
+          </span>
+          <form method="post" action="/tool" class="remove-item-form" style="display:inline; margin-left: 10px;">
+            <input type="hidden" name="action" value="remove">
+            <input type="hidden" name="index" value="{{ loop.index0 }}">
+            <button type="submit" style="background: #ff4444; color: white; border: none; padding: 2px 8px; border-radius: 3px; cursor: pointer; font-size: 0.8em;">
+              Remove
+            </button>
+          </form>
+        </div>
+      {% endfor %}
+    </div>
 
     <h3>Totals</h3>
-    <table>
+    <table style="border-collapse: collapse; width: 100%; max-width: 600px;">
       <thead>
-        <tr>
-          <th>Calories</th>
-          <th>Protein</th>
-          <th>Carbs</th>
-          <th>Fat</th>
-          <th>Sugar</th>
+        <tr style="background-color: #f5f5f5;">
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Calories</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Protein</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Carbs</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Fat</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Sugar</th>
         </tr>
       </thead>
       <tbody>
         <tr>
-          <td>{{ total.calories }}</td>
-          <td>{{ total.protein }}</td>
-          <td>{{ total.carbs }}</td>
-          <td>{{ total.fat }}</td>
-          <td>{{ total.sugar }}</td>
+          <td id="total-calories" style="border: 1px solid #ddd; padding: 8px;">{{ total.calories or 0 }}</td>
+          <td id="total-protein" style="border: 1px solid #ddd; padding: 8px;">{{ total.protein or 0 }}</td>
+          <td id="total-carbs" style="border: 1px solid #ddd; padding: 8px;">{{ total.carbs or 0 }}</td>
+          <td id="total-fat" style="border: 1px solid #ddd; padding: 8px;">{{ total.fat or 0 }}</td>
+          <td id="total-sugar" style="border: 1px solid #ddd; padding: 8px;">{{ total.sugar or 0 }}</td>
         </tr>
       </tbody>
     </table>
 
     {% if warnings %}
-    <div class="alert alert-warning">
+    <div class="alert alert-warning" style="background-color: #fff3cd; border: 1px solid #ffeaa7; padding: 1em; margin: 1em 0; border-radius: 4px;">
       <h3>Nutritional Warnings</h3>
       <ul>
       {% for w in warnings %}
@@ -118,17 +125,18 @@
     </div>
     {% endif %}
 
-    <form method="post" id="complete-form">
+    <form method="post" id="complete-form" style="margin-top: 1em;">
       <input type="hidden" name="action" value="complete">
-        
-      <button type="submit">This is my complete meal</button>
+      <button type="submit" style="background: #28a745; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-size: 1em;">
+        This is my complete meal
+      </button>
     </form>
     {% endif %}
       
-    <div id="thinking">Thinking...</div>
+    <div id="thinking" style="display:none; color: gray; font-style: italic; margin-top: 1em;">Thinking...</div>
       
 {% if advice %}
-  <div class="ai-response-box">
+  <div class="ai-response-box" style="background-color: #e8f5e8; border: 1px solid #4caf50; padding: 1em; margin: 1em 0; border-radius: 4px;">
     {% for line in advice.split('\n') %}
       {% if line.strip() %}
         {% if loop.first %}
@@ -146,9 +154,9 @@
   <!-- RIGHT: Reference Table -->
   <div style="flex:1;">
     <h4>Serving Size Reference (Typical Per-Person Amounts)</h4>
-    <table border="1" cellpadding="6" cellspacing="0">
+    <table border="1" cellpadding="6" cellspacing="0" style="border-collapse: collapse; width: 100%; font-size: 0.9em;">
       <thead>
-        <tr><th>Food Type</th><th>Typical Serving</th><th>Approx. Grams</th></tr>
+        <tr style="background-color: #f5f5f5;"><th>Food Type</th><th>Typical Serving</th><th>Approx. Grams</th></tr>
       </thead>
       <tbody>
         <tr><td>Fruit (whole)</td><td>1 medium apple, banana</td><td>150 g</td></tr>
@@ -183,7 +191,6 @@
   </div>
 </div>
 <hr>
-<p style="text-align:center;font-size:0.8em;">2025 Smart Meal Helper</p>
 {% endblock %}
 
 {% block scripts %}
