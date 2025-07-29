@@ -7,3 +7,4 @@ python-dotenv>=1.0
 requests>=2.31
 thefuzz>=0.20
 python-Levenshtein>=0.23
+gunicorn==23.0.0
